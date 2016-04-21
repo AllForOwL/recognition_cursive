@@ -1,5 +1,7 @@
 #pragma once
 
+#include "OperationFromWords.h"
+
 namespace recognitionCursive {
 
 	using namespace System;
@@ -14,13 +16,14 @@ namespace recognitionCursive {
 	/// </summary>
 	public ref class formMain : public System::Windows::Forms::Form
 	{
-	public:
+		public:
+			OperationFromWords^ m_OperationWord;
+	
 		formMain(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: добавьте код конструктора
-			//
+			
+			m_OperationWord = gcnew OperationFromWords();
 		}
 
 	protected:
@@ -38,6 +41,7 @@ namespace recognitionCursive {
 	protected: 
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button3;
+	private: System::Windows::Forms::TextBox^  textBox1;
 
 	private:
 		/// <summary>
@@ -55,6 +59,7 @@ namespace recognitionCursive {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button3 = (gcnew System::Windows::Forms::Button());
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -65,6 +70,7 @@ namespace recognitionCursive {
 			this->button1->TabIndex = 0;
 			this->button1->Text = L"считать все слова";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &formMain::button1_Click);
 			// 
 			// button2
 			// 
@@ -84,19 +90,57 @@ namespace recognitionCursive {
 			this->button3->Text = L"запись на основе конечного автомата";
 			this->button3->UseVisualStyleBackColor = true;
 			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(362, 78);
+			this->textBox1->Multiline = true;
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(100, 20);
+			this->textBox1->TabIndex = 3;
+			// 
 			// formMain
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(164, 314);
+			this->ClientSize = System::Drawing::Size(706, 314);
+			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button3);
 			this->Controls->Add(this->button2);
 			this->Controls->Add(this->button1);
 			this->Name = L"formMain";
 			this->Text = L"formMain";
+			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
-	};
+	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) 
+			 {
+				 m_OperationWord->ReadDictionaryFromFile();
+				
+				 m_OperationWord->BuildCompressedTree();
+
+				 StreamWriter^ writeRecognition = gcnew StreamWriter("compressedTree.txt", false);
+
+				 for (int i = 0; i < 5000; i++)
+				 {
+					 writeRecognition->WriteLine(m_OperationWord->m_arDictionary[i]);
+				 }
+
+				 writeRecognition->Close();
+
+				 StreamWriter^ writeRecognition2 = gcnew StreamWriter("finaleMachine.txt", false);
+
+				 for (int i = 5000; i < 10000; i++)
+				 {
+					 writeRecognition2->WriteLine(m_OperationWord->m_arDictionary[i]);
+				 }
+
+				 writeRecognition2->Close();
+
+			 }
+	private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) {
+			 }
+};
 }
