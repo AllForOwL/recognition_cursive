@@ -1,10 +1,11 @@
 #include "OperationFromWords.h"
+#include "formMain.h"
 
 OperationFromWords::OperationFromWords(void)
 {
 	m_arDictionary = gcnew array<String^>(CNT_COUNT_WORD);
 
-	//m_nodeRootTree = gcnew Node();
+	m_arLeaf = gcnew array<Node^>(CNT_COUNT_WORD);
 }
 
 void OperationFromWords::ReadDictionaryFromFile()
@@ -29,25 +30,35 @@ void OperationFromWords::BuildCompressedTree()
 {
 	String^ word;
 
-	word = m_arDictionary[0];
-	m_nodeRootTree = gcnew Node(word ,word->Length);
-	//m_nodeRootTree = this->insert(m_nodeRootTree, word, word->Length+1);
+	//word = m_arDictionary[0];
+	m_nodeRootTree = gcnew Node(m_arDictionary[0], m_arDictionary[0]->Length);
+
+	Node^ node;
 
 	int b = 1;
 
 	for (int i = 1; i < CNT_COUNT_WORD; i++)
 	{
 		word = m_arDictionary[i];
-		Node^ newNode = gcnew Node(word, word->Length);
-		newNode = this->insert(m_nodeRootTree, word, word->Length);
+		m_arLeaf[i] = this->insert(m_nodeRootTree, word, word->Length);
 	}
 
+}
+
+void OperationFromWords::OutputWordFromTree()
+{
+	Node^ node = gcnew Node("",0);
+	for (int i(0); i < CNT_COUNT_WORD; i++)
+	{
+		node = this->find(this->m_nodeRootTree, m_arDictionary[i], m_arDictionary[i]->Length);
+		
+	}
 }
 
 // определяет наибольший общий префикс и возвржает его длину  
 int OperationFromWords::prefix(String^ x, int n, String^ key, int m)
 {
-	int m_ = key->Length-1;
+	int m_ = key->Length;
 
 	for( int k=0; k<n; k++ )
 		if( k==m_ || key == "" || x[k]!=key[k]) 
