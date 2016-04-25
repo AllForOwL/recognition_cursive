@@ -1,0 +1,16 @@
+#include "formMain.h"
+
+using namespace System;
+using namespace System::Windows::Forms;
+
+[STAThread]
+
+void main(array<String^>^ args)
+{
+	Application::EnableVisualStyles();
+	Application::SetCompatibleTextRenderingDefault(false);
+
+	recognitionCursive::formMain form;
+
+	Application::Run(%form);
+}

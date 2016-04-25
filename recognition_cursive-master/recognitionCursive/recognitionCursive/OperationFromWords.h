@@ -34,7 +34,6 @@ public:
 	array <String^>^ m_arDictionary;
 	Node^ m_nodeRootTree;
 	array<Node^>^ m_arLeaf;
-
 public:
 	OperationFromWords();
 
@@ -52,13 +51,10 @@ public:
 	void join(Node^ t); // слияние узлов t и t->link
 	Node^ remove(Node^ t, String^ x, int n); // удаление ключа x из дерева t
 	void OutputWordFromTree();
-	//void RecoveryWord();
 
-	void addMinWord(String^ w) ;
-	void replaceOrRegister(String ^w, array<int>^ stateList) ;
-	array<int>^ prefix(String^ w);
-	int findConfluence(array<int>^ stateList);
-	//void add(String^ w);
-	void OperationFromWords::addSuffix(String^ w, array<int>^stateList);
+
+	//void addMinWord(String^ w) ;
+	//void replaceOrRegister(String ^w, array<int>^ stateList) ;
+
 };
 
