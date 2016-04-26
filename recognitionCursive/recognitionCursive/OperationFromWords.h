@@ -34,6 +34,7 @@ public:
 	array <String^>^ m_arDictionary;
 	Node^ m_nodeRootTree;
 	array<Node^>^ m_arLeaf;
+	int m_iCountWord;
 
 public:
 	OperationFromWords();

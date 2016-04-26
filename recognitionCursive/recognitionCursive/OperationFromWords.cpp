@@ -3,9 +3,11 @@
 
 OperationFromWords::OperationFromWords(void)
 {
-	m_arDictionary = gcnew array<String^>(CNT_COUNT_WORD);
+	m_arDictionary = gcnew array<String^>(CNT_COUNT_WORD*2);
 
 	String^ text = "¿·‡"; 
+	m_arDictionary[0] = text;
+	m_iCountWord = 0;
 
 	m_arLeaf = gcnew array<Node^>(CNT_COUNT_WORD);
 	m_nodeRootTree = gcnew Node(text, text->Length);
@@ -33,16 +35,13 @@ void OperationFromWords::BuildCompressedTree()
 {
 	StreamReader^ ffileReadTree = gcnew StreamReader("tree.txt");
 
-	String^ word;
-
 	Node^ node;
-
-	int b = 1;
 
 	while (!ffileReadTree->EndOfStream)
 	{
-		word = ffileReadTree->ReadLine();
-		node = this->insert(m_nodeRootTree, word, word->Length);
+		++m_iCountWord;
+		m_arDictionary[m_iCountWord] = ffileReadTree->ReadLine();
+		node = this->insert(m_nodeRootTree, m_arDictionary[m_iCountWord], m_arDictionary[m_iCountWord]->Length);
 	}
 
 	ffileReadTree->Close();

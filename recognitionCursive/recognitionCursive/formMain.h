@@ -278,6 +278,7 @@ namespace recognitionCursive {
 			this->Controls->Add(this->button1);
 			this->Name = L"formMain";
 			this->Text = L"formMain";
+			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -331,9 +332,12 @@ private: System::Void button5_Click(System::Object^  sender, System::EventArgs^ 
 			 String^ addWord = textBox3->Text;
 
 			 m_OperationWord->insert(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
-			 //m_OperationWord->m_arDictionary[m_OperationWord->m_arDictionary->si] = addWord;
 			 
 			 textBox1->AppendText(addWord);
+
+			 ++m_OperationWord->m_iCountWord;
+			 m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
+
 		 }
 private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -341,17 +345,22 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 
 			 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, removeStr, removeStr->Length);
 
-			 int fiCountLines = textBox1->Lines->Length;
-
-			 array<String^>^ farrWord = gcnew array<String^>(fiCountLines);
-
-			 for (int i = 0; i < fiCountLines; i++)
+			 for (int i = 0; i < m_OperationWord->m_iCountWord; i++)
 			 {
-				 farrWord[i] = textBox1->Lines[i]->ToString();
-				 if (String::Compare(farrWord[i],removeStr))
+				 if (m_OperationWord->m_arDictionary[i] == removeStr)
 				 {
-					 farrWord[i] = " ";
-					 textBox1->Lines[i] = farrWord[i];
+					 m_OperationWord->m_arDictionary[i] = "";
+
+					 textBox1->Clear();
+
+					 for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 {
+						 if (m_OperationWord->m_arDictionary[j] != "")
+						 {
+							 textBox1->AppendText(m_OperationWord->m_arDictionary[j] + Environment::NewLine);
+						 }
+					 }
+
 					 break;
 				 }
 			 }
@@ -394,27 +403,35 @@ private: System::Void button7_Click(System::Object^  sender, System::EventArgs^ 
 			 String^ addWord = textBox6->Text;
 
 			 m_OperationWord->insert(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
-			 //m_OperationWord->m_arDictionary[m_OperationWord->m_arDictionary->si] = addWord;
+
+			 ++m_OperationWord->m_iCountWord;
+			 m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
 			 
 			 textBox8->AppendText(addWord);
 		 }
 private: System::Void button8_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			  String^ removeStr = textBox7->Text;
-
+	
 			 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, removeStr, removeStr->Length);
 
-			 int fiCountLines = textBox1->Lines->Length;
-
-			 array<String^>^ farrWord = gcnew array<String^>(fiCountLines);
-
-			 for (int i = 0; i < fiCountLines; i++)
+			 for (int i = 0; i < m_OperationWord->m_iCountWord; i++)
 			 {
-				 farrWord[i] = textBox8->Lines[i]->ToString();
-				 if (String::Compare(farrWord[i],removeStr))
+				 if (m_OperationWord->m_arDictionary[i] == removeStr)
 				 {
-					 farrWord[i] = " ";
-					 textBox1->Lines[i] = farrWord[i];
+					 --m_OperationWord->m_iCountWord;
+					 m_OperationWord->m_arDictionary[i] = "";
+
+					 textBox1->Clear();
+
+					 for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 {
+						 if (m_OperationWord->m_arDictionary[j] != "")
+						 {
+							 textBox8->AppendText(m_OperationWord->m_arDictionary[j] + Environment::NewLine);
+						 }
+					 }
+
 					 break;
 				 }
 			 }
@@ -462,6 +479,8 @@ private: System::Void button10_Click(System::Object^  sender, System::EventArgs^
 			 }
 		 }
 private: System::Void textBox2_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
 }
