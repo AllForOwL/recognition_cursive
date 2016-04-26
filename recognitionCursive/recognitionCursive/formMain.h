@@ -170,7 +170,7 @@ namespace recognitionCursive {
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(128, 69);
 			this->button2->TabIndex = 10;
-			this->button2->Text = L"—читать слова в конечный автомат\r\n";
+			this->button2->Text = L"—читать слова c конечного автомата\r\n\r\n";
 			this->button2->UseVisualStyleBackColor = true;
 			this->button2->Click += gcnew System::EventHandler(this, &formMain::button2_Click);
 			// 
@@ -360,46 +360,64 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 
 private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			  m_OperationWord->ReadDictionaryFromFile();
-				
-				 m_OperationWord->BuildCompressedTree();
+			 	 m_OperationWord->BuildCompressedTree();
+					
+				 StreamReader^ readWordFromFile = gcnew StreamReader("finaly.txt");
 
-				 Node^ findNode = gcnew Node("", 0);
-				 findNode = nullptr;
+				 while (!readWordFromFile->EndOfStream)
+				 {
+					 textBox8->AppendText(readWordFromFile->ReadLine() + Environment::NewLine);
+				 }
 
-				 for (int i(0); i < CNT_COUNT_WORD; i++)
-				// {
-//					 findNode = m_OperationWord->find(m_OperationWord->m_nodeRootTree, m_OperationWord->m_arDictionary[i], m_OperationWord->m_arDictionary[i]->Length);
-					 textBox8->AppendText(m_OperationWord->m_arDictionary[i]);
-					 
-					// findNode = nullptr;
+				 readWordFromFile->Close();
 				 }
 		 private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) 
 				  {
-					  	 String^ searchWord = textBox5->Text;
+					   String^ searchWord = textBox5->Text;
 
-						 Node^ searchNode = gcnew Node("",0);
-						 searchNode = nullptr;
+					 Node^ searchNode = gcnew Node("",0);
+					 searchNode = nullptr;
 
-						 searchNode = m_OperationWord->find(m_OperationWord->m_nodeRootTree, searchWord, searchWord->Length);
+					 searchNode = m_OperationWord->find(m_OperationWord->m_nodeRootTree, searchWord, searchWord->Length);
 
-						 if (searchNode != nullptr)
-						 {
-							 MessageBox::Show(searchWord);
-						 }
+					 if (searchNode != nullptr)
+					 {
+						 MessageBox::Show(searchWord);
+					 }
+					 else
+					 {
+						 MessageBox::Show("—лово не найдено");
+					 }
 				  }
 private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 String^ addWord = textBox6->Text;
 
 			 m_OperationWord->insert(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
-			 textBox1->AppendText(addWord);
+			 //m_OperationWord->m_arDictionary[m_OperationWord->m_arDictionary->si] = addWord;
+			 
+			 textBox8->AppendText(addWord);
 		 }
 private: System::Void button8_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			  String^ removeStr = textBox7->Text;
 
 			 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, removeStr, removeStr->Length);
+
+			 int fiCountLines = textBox1->Lines->Length;
+
+			 array<String^>^ farrWord = gcnew array<String^>(fiCountLines);
+
+			 for (int i = 0; i < fiCountLines; i++)
+			 {
+				 farrWord[i] = textBox8->Lines[i]->ToString();
+				 if (String::Compare(farrWord[i],removeStr))
+				 {
+					 farrWord[i] = " ";
+					 textBox1->Lines[i] = farrWord[i];
+					 break;
+				 }
+			 }
 		 }
 private: System::Void button9_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
@@ -427,12 +445,21 @@ private: System::Void button10_Click(System::Object^  sender, System::EventArgs^
 		 {
 			 StreamWriter^ write = gcnew StreamWriter("finaly.txt", false);
 			 
-			 for (int i = 0; i < CNT_COUNT_WORD; i++)
-			 {
-				 write->WriteLine(m_OperationWord->m_arDictionary[i]);
-			 }
+			 Node^	 findNode = gcnew Node("", 0);
+			 int	 fiMaxCountLineTextBox = textBox8->Lines->Length;
+			 String^ fstrTextBox;
 
-			 write->Close();
+			 for (int i = 0; i < fiMaxCountLineTextBox; i++)
+			 {
+				 if (textBox8->Lines[i] == "")
+				 {
+					 break;
+				 }
+
+				 fstrTextBox = Convert::ToString(textBox8->Lines[i]);
+				 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, fstrTextBox, fstrTextBox->Length);
+				 write->WriteLine(fstrTextBox);
+			 }
 		 }
 private: System::Void textBox2_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }

@@ -18,10 +18,32 @@
     <ClCompile Include="formMain.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
+    <ClCompile Include="OperationFromWords.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="formMain.h">
       <Filter>Заголовочные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="OperationFromWords.h">
+      <Filter>Заголовочные файлы</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="formMain.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Debug\allword.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="..\Debug\word_finite_state.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
+    <Text Include="..\Debug\word_on_tree.txt">
+      <Filter>Файлы ресурсов</Filter>
+    </Text>
   </ItemGroup>
 </Project>

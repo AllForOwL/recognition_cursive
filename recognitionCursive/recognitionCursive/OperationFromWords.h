@@ -59,6 +59,6 @@ public:
 	array<int>^ prefix(String^ w);
 	int findConfluence(array<int>^ stateList);
 	//void add(String^ w);
-	void OperationFromWords::addSuffix(String^ w, array<int>^stateList);
+	void addSuffix(String^ w, array<int>^stateList);
 };
 

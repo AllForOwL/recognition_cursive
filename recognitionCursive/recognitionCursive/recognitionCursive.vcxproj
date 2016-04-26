@@ -79,16 +79,23 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="formMain.cpp" />
+    <ClCompile Include="OperationFromWords.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="formMain.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="OperationFromWords.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="formMain.resx">
       <DependentUpon>formMain.h</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\Debug\allword.txt" />
+    <Text Include="..\Debug\word_finite_state.txt" />
+    <Text Include="..\Debug\word_on_tree.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

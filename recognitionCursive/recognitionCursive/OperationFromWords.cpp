@@ -223,7 +223,6 @@ void OperationFromWords::addSuffix(String^ w, array<int>^stateList)
     // установка признака финальности для s[current
 }
 
-
 void OperationFromWords::replaceOrRegister(String^ w, array<int>^ stateList) 
 {
 	int	stateIdx = stateList->Length - 1;
