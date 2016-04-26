@@ -58,6 +58,12 @@ namespace recognitionCursive {
 	private: System::Windows::Forms::TextBox^  textBox8;
 	private: System::Windows::Forms::Button^  button9;
 	private: System::Windows::Forms::Button^  button10;
+	private: System::Windows::Forms::Button^  button11;
+	private: System::Windows::Forms::OpenFileDialog^  openFileDialog1;
+	private: System::Windows::Forms::TextBox^  textBox9;
+	private: System::Windows::Forms::GroupBox^  groupBox1;
+	private: System::Windows::Forms::PictureBox^  pictureBox1;
+	private: System::Windows::Forms::Button^  button12;
 
 
 	private:
@@ -91,6 +97,14 @@ namespace recognitionCursive {
 			this->textBox8 = (gcnew System::Windows::Forms::TextBox());
 			this->button9 = (gcnew System::Windows::Forms::Button());
 			this->button10 = (gcnew System::Windows::Forms::Button());
+			this->button11 = (gcnew System::Windows::Forms::Button());
+			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->textBox9 = (gcnew System::Windows::Forms::TextBox());
+			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
+			this->button12 = (gcnew System::Windows::Forms::Button());
+			this->groupBox1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button1
@@ -109,7 +123,7 @@ namespace recognitionCursive {
 			this->textBox1->Location = System::Drawing::Point(12, 80);
 			this->textBox1->Multiline = true;
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(139, 235);
+			this->textBox1->Size = System::Drawing::Size(139, 70);
 			this->textBox1->TabIndex = 3;
 			// 
 			// textBox2
@@ -166,7 +180,7 @@ namespace recognitionCursive {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(554, 12);
+			this->button2->Location = System::Drawing::Point(12, 174);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(128, 69);
 			this->button2->TabIndex = 10;
@@ -176,7 +190,7 @@ namespace recognitionCursive {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(699, 80);
+			this->button3->Location = System::Drawing::Point(157, 242);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 11;
@@ -186,7 +200,7 @@ namespace recognitionCursive {
 			// 
 			// button7
 			// 
-			this->button7->Location = System::Drawing::Point(780, 80);
+			this->button7->Location = System::Drawing::Point(238, 242);
 			this->button7->Name = L"button7";
 			this->button7->Size = System::Drawing::Size(75, 23);
 			this->button7->TabIndex = 12;
@@ -196,7 +210,7 @@ namespace recognitionCursive {
 			// 
 			// button8
 			// 
-			this->button8->Location = System::Drawing::Point(861, 80);
+			this->button8->Location = System::Drawing::Point(319, 242);
 			this->button8->Name = L"button8";
 			this->button8->Size = System::Drawing::Size(75, 23);
 			this->button8->TabIndex = 13;
@@ -206,31 +220,31 @@ namespace recognitionCursive {
 			// 
 			// textBox5
 			// 
-			this->textBox5->Location = System::Drawing::Point(699, 109);
+			this->textBox5->Location = System::Drawing::Point(157, 271);
 			this->textBox5->Name = L"textBox5";
 			this->textBox5->Size = System::Drawing::Size(75, 20);
 			this->textBox5->TabIndex = 14;
 			// 
 			// textBox6
 			// 
-			this->textBox6->Location = System::Drawing::Point(780, 109);
+			this->textBox6->Location = System::Drawing::Point(238, 271);
 			this->textBox6->Name = L"textBox6";
 			this->textBox6->Size = System::Drawing::Size(75, 20);
 			this->textBox6->TabIndex = 15;
 			// 
 			// textBox7
 			// 
-			this->textBox7->Location = System::Drawing::Point(861, 109);
+			this->textBox7->Location = System::Drawing::Point(319, 271);
 			this->textBox7->Name = L"textBox7";
 			this->textBox7->Size = System::Drawing::Size(75, 20);
 			this->textBox7->TabIndex = 16;
 			// 
 			// textBox8
 			// 
-			this->textBox8->Location = System::Drawing::Point(554, 87);
+			this->textBox8->Location = System::Drawing::Point(12, 249);
 			this->textBox8->Multiline = true;
 			this->textBox8->Name = L"textBox8";
-			this->textBox8->Size = System::Drawing::Size(128, 211);
+			this->textBox8->Size = System::Drawing::Size(128, 42);
 			this->textBox8->TabIndex = 17;
 			// 
 			// button9
@@ -245,7 +259,7 @@ namespace recognitionCursive {
 			// 
 			// button10
 			// 
-			this->button10->Location = System::Drawing::Point(688, 12);
+			this->button10->Location = System::Drawing::Point(146, 174);
 			this->button10->Name = L"button10";
 			this->button10->Size = System::Drawing::Size(86, 61);
 			this->button10->TabIndex = 19;
@@ -253,11 +267,66 @@ namespace recognitionCursive {
 			this->button10->UseVisualStyleBackColor = true;
 			this->button10->Click += gcnew System::EventHandler(this, &formMain::button10_Click);
 			// 
+			// button11
+			// 
+			this->button11->Location = System::Drawing::Point(122, 29);
+			this->button11->Name = L"button11";
+			this->button11->Size = System::Drawing::Size(34, 23);
+			this->button11->TabIndex = 20;
+			this->button11->Text = L"...";
+			this->button11->UseVisualStyleBackColor = true;
+			this->button11->Click += gcnew System::EventHandler(this, &formMain::button11_Click);
+			// 
+			// openFileDialog1
+			// 
+			this->openFileDialog1->FileName = L"openFileDialog1";
+			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &formMain::openFileDialog1_FileOk);
+			// 
+			// textBox9
+			// 
+			this->textBox9->Location = System::Drawing::Point(16, 31);
+			this->textBox9->Name = L"textBox9";
+			this->textBox9->Size = System::Drawing::Size(100, 20);
+			this->textBox9->TabIndex = 21;
+			// 
+			// groupBox1
+			// 
+			this->groupBox1->Controls->Add(this->button12);
+			this->groupBox1->Controls->Add(this->pictureBox1);
+			this->groupBox1->Controls->Add(this->button11);
+			this->groupBox1->Controls->Add(this->textBox9);
+			this->groupBox1->Location = System::Drawing::Point(536, 22);
+			this->groupBox1->Name = L"groupBox1";
+			this->groupBox1->Size = System::Drawing::Size(449, 356);
+			this->groupBox1->TabIndex = 22;
+			this->groupBox1->TabStop = false;
+			this->groupBox1->Text = L"Распознавание";
+			// 
+			// pictureBox1
+			// 
+			this->pictureBox1->Location = System::Drawing::Point(16, 58);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(302, 224);
+			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
+			this->pictureBox1->TabIndex = 22;
+			this->pictureBox1->TabStop = false;
+			// 
+			// button12
+			// 
+			this->button12->Location = System::Drawing::Point(349, 17);
+			this->button12->Name = L"button12";
+			this->button12->Size = System::Drawing::Size(85, 47);
+			this->button12->TabIndex = 23;
+			this->button12->Text = L"Распознать";
+			this->button12->UseVisualStyleBackColor = true;
+			this->button12->Click += gcnew System::EventHandler(this, &formMain::button12_Click_1);
+			// 
 			// formMain
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1077, 367);
+			this->ClientSize = System::Drawing::Size(1077, 540);
+			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->button10);
 			this->Controls->Add(this->button9);
 			this->Controls->Add(this->textBox8);
@@ -279,6 +348,9 @@ namespace recognitionCursive {
 			this->Name = L"formMain";
 			this->Text = L"formMain";
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
+			this->groupBox1->ResumeLayout(false);
+			this->groupBox1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -481,6 +553,16 @@ private: System::Void button10_Click(System::Object^  sender, System::EventArgs^
 private: System::Void textBox2_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
+		 }
+private: System::Void button11_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+
+		 }
+private: System::Void button12_Click_1(System::Object^  sender, System::EventArgs^  e) 
+		 {
+
 		 }
 };
 }
