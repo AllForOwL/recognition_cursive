@@ -1,6 +1,7 @@
 #pragma once
 
 #include "OperationFromWords.h"
+#include "RecognitionWord.h"
 
 namespace recognitionCursive {
 
@@ -18,12 +19,18 @@ namespace recognitionCursive {
 	{
 		public:
 			OperationFromWords^ m_OperationWord;
-	
+			RecognitionWord^    m_RecognitionWord;
+
 		formMain(void)
 		{
 			InitializeComponent();
 			
+			this->button1->Click += gcnew
+				System::EventHandler(this, &formMain::button1_Click);
+
+
 			m_OperationWord = gcnew OperationFromWords();
+			
 		}
 
 	protected:
@@ -101,8 +108,8 @@ namespace recognitionCursive {
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->textBox9 = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->button12 = (gcnew System::Windows::Forms::Button());
+			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
@@ -123,8 +130,10 @@ namespace recognitionCursive {
 			this->textBox1->Location = System::Drawing::Point(12, 80);
 			this->textBox1->Multiline = true;
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(139, 70);
+			this->textBox1->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
+			this->textBox1->Size = System::Drawing::Size(139, 165);
 			this->textBox1->TabIndex = 3;
+			this->textBox1->TextChanged += gcnew System::EventHandler(this, &formMain::textBox1_TextChanged);
 			// 
 			// textBox2
 			// 
@@ -180,7 +189,7 @@ namespace recognitionCursive {
 			// 
 			// button2
 			// 
-			this->button2->Location = System::Drawing::Point(12, 174);
+			this->button2->Location = System::Drawing::Point(12, 287);
 			this->button2->Name = L"button2";
 			this->button2->Size = System::Drawing::Size(128, 69);
 			this->button2->TabIndex = 10;
@@ -190,7 +199,7 @@ namespace recognitionCursive {
 			// 
 			// button3
 			// 
-			this->button3->Location = System::Drawing::Point(157, 242);
+			this->button3->Location = System::Drawing::Point(157, 355);
 			this->button3->Name = L"button3";
 			this->button3->Size = System::Drawing::Size(75, 23);
 			this->button3->TabIndex = 11;
@@ -200,7 +209,7 @@ namespace recognitionCursive {
 			// 
 			// button7
 			// 
-			this->button7->Location = System::Drawing::Point(238, 242);
+			this->button7->Location = System::Drawing::Point(238, 355);
 			this->button7->Name = L"button7";
 			this->button7->Size = System::Drawing::Size(75, 23);
 			this->button7->TabIndex = 12;
@@ -210,7 +219,7 @@ namespace recognitionCursive {
 			// 
 			// button8
 			// 
-			this->button8->Location = System::Drawing::Point(319, 242);
+			this->button8->Location = System::Drawing::Point(319, 355);
 			this->button8->Name = L"button8";
 			this->button8->Size = System::Drawing::Size(75, 23);
 			this->button8->TabIndex = 13;
@@ -220,31 +229,32 @@ namespace recognitionCursive {
 			// 
 			// textBox5
 			// 
-			this->textBox5->Location = System::Drawing::Point(157, 271);
+			this->textBox5->Location = System::Drawing::Point(157, 384);
 			this->textBox5->Name = L"textBox5";
 			this->textBox5->Size = System::Drawing::Size(75, 20);
 			this->textBox5->TabIndex = 14;
 			// 
 			// textBox6
 			// 
-			this->textBox6->Location = System::Drawing::Point(238, 271);
+			this->textBox6->Location = System::Drawing::Point(238, 384);
 			this->textBox6->Name = L"textBox6";
 			this->textBox6->Size = System::Drawing::Size(75, 20);
 			this->textBox6->TabIndex = 15;
 			// 
 			// textBox7
 			// 
-			this->textBox7->Location = System::Drawing::Point(319, 271);
+			this->textBox7->Location = System::Drawing::Point(319, 384);
 			this->textBox7->Name = L"textBox7";
 			this->textBox7->Size = System::Drawing::Size(75, 20);
 			this->textBox7->TabIndex = 16;
 			// 
 			// textBox8
 			// 
-			this->textBox8->Location = System::Drawing::Point(12, 249);
+			this->textBox8->Location = System::Drawing::Point(12, 362);
 			this->textBox8->Multiline = true;
 			this->textBox8->Name = L"textBox8";
-			this->textBox8->Size = System::Drawing::Size(128, 42);
+			this->textBox8->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
+			this->textBox8->Size = System::Drawing::Size(128, 131);
 			this->textBox8->TabIndex = 17;
 			// 
 			// button9
@@ -259,7 +269,7 @@ namespace recognitionCursive {
 			// 
 			// button10
 			// 
-			this->button10->Location = System::Drawing::Point(146, 174);
+			this->button10->Location = System::Drawing::Point(146, 287);
 			this->button10->Name = L"button10";
 			this->button10->Size = System::Drawing::Size(86, 61);
 			this->button10->TabIndex = 19;
@@ -297,19 +307,10 @@ namespace recognitionCursive {
 			this->groupBox1->Controls->Add(this->textBox9);
 			this->groupBox1->Location = System::Drawing::Point(536, 22);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(449, 356);
+			this->groupBox1->Size = System::Drawing::Size(540, 506);
 			this->groupBox1->TabIndex = 22;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Распознавание";
-			// 
-			// pictureBox1
-			// 
-			this->pictureBox1->Location = System::Drawing::Point(16, 58);
-			this->pictureBox1->Name = L"pictureBox1";
-			this->pictureBox1->Size = System::Drawing::Size(302, 224);
-			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
-			this->pictureBox1->TabIndex = 22;
-			this->pictureBox1->TabStop = false;
 			// 
 			// button12
 			// 
@@ -320,6 +321,15 @@ namespace recognitionCursive {
 			this->button12->Text = L"Распознать";
 			this->button12->UseVisualStyleBackColor = true;
 			this->button12->Click += gcnew System::EventHandler(this, &formMain::button12_Click_1);
+			// 
+			// pictureBox1
+			// 
+			this->pictureBox1->Location = System::Drawing::Point(16, 58);
+			this->pictureBox1->Name = L"pictureBox1";
+			this->pictureBox1->Size = System::Drawing::Size(302, 224);
+			this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
+			this->pictureBox1->TabIndex = 22;
+			this->pictureBox1->TabStop = false;
 			// 
 			// formMain
 			// 
@@ -385,30 +395,59 @@ private: System::Void button4_Click(System::Object^  sender, System::EventArgs^ 
 		 {
 			 String^ searchWord = textBox2->Text;
 
-			 Node^ searchNode = gcnew Node("",0);
-			 searchNode = nullptr;
+			 Node^ searchNode = m_OperationWord->find(m_OperationWord->m_nodeRootTree, searchWord, searchWord->Length);
 
-			 searchNode = m_OperationWord->find(m_OperationWord->m_nodeRootTree, searchWord, searchWord->Length);
+				for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 {
+						 if (m_OperationWord->m_arDictionary[j] == searchWord)
+						 {
+								MessageBox::Show("Слово сущевствует");
+								return;
+						 }
+					 }
 
-			 if (searchNode != nullptr)
-			 {
-				 MessageBox::Show(searchWord);
-			 }
-			 else
-			 {
-				 MessageBox::Show("Слово не найдено");
-			 }
+				MessageBox::Show("Слово не сущевствует");
 		 }
 private: System::Void button5_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 String^ addWord = textBox3->Text;
 
-			 m_OperationWord->insert(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
-			 
-			 textBox1->AppendText(addWord);
+			 Node^ node = m_OperationWord->find(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
+			
+			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 {
+						 if (m_OperationWord->m_arDictionary[j] == addWord)
+						 {
+								MessageBox::Show("Слово сущевствует");
+								return;
+						 }
+					 }
 
-			 ++m_OperationWord->m_iCountWord;
-			 m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
+			  m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
+			  ++m_OperationWord->m_iCountWord;
+
+			  MessageBox::Show("Слово добавлено");
+
+			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 {
+						 if (m_OperationWord->m_arDictionary[j] != "")
+						 {
+							 textBox1->AppendText(m_OperationWord->m_arDictionary[j] + Environment::NewLine);
+						 }
+					 }
+			 /*if (node == nullptr)
+			 {
+				m_OperationWord->insert(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
+				++m_OperationWord->m_iCountWord;
+				m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
+				textBox1->AppendText(addWord);
+				MessageBox::Show("Слово добавлено");
+			 }
+			 else
+			 {
+				 
+			 }
+			 	*/ 
 
 		 }
 private: System::Void button6_Click(System::Object^  sender, System::EventArgs^  e) 
@@ -454,6 +493,7 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 				 }
 		 private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) 
 				  {
+
 					   String^ searchWord = textBox5->Text;
 
 					 Node^ searchNode = gcnew Node("",0);
@@ -473,28 +513,44 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			 String^ addWord = textBox6->Text;
+			
+			 Node^ node = m_OperationWord->find(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
+			
+			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 {
+						 if (m_OperationWord->m_arDictionary[j] == addWord)
+						 {
+								MessageBox::Show("Слово сущевствует");
+								return;
+						 }
+					 }
 
-			 m_OperationWord->insert(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
+			  m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
+			  ++m_OperationWord->m_iCountWord;
 
-			 ++m_OperationWord->m_iCountWord;
-			 m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
-			 
-			 textBox8->AppendText(addWord);
+			  MessageBox::Show("Слово добавлено");
+
+			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 {
+						 if (m_OperationWord->m_arDictionary[j] != "")
+						 {
+							 textBox8->AppendText(m_OperationWord->m_arDictionary[j] + Environment::NewLine);
+						 }
+					 }
 		 }
 private: System::Void button8_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
 			  String^ removeStr = textBox7->Text;
 	
-			 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, removeStr, removeStr->Length);
+	 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, removeStr, removeStr->Length);
 
 			 for (int i = 0; i < m_OperationWord->m_iCountWord; i++)
 			 {
 				 if (m_OperationWord->m_arDictionary[i] == removeStr)
 				 {
-					 --m_OperationWord->m_iCountWord;
 					 m_OperationWord->m_arDictionary[i] = "";
 
-					 textBox1->Clear();
+					 textBox8->Clear();
 
 					 for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
 					 {
@@ -552,17 +608,37 @@ private: System::Void button10_Click(System::Object^  sender, System::EventArgs^
 		 }
 private: System::Void textBox2_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
-private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void formMain_Load(System::Object^  sender, System::EventArgs^  e) 
+		 {
+
 		 }
 private: System::Void openFileDialog1_FileOk(System::Object^  sender, System::ComponentModel::CancelEventArgs^  e) {
 		 }
 private: System::Void button11_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
+			 Bitmap^ bitmap;
+
+			 openFileDialog1->Filter = "Image file|*.bmp";
+			 openFileDialog1->Title  = "Select a Image File";
+
+			if(openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+			{
+				bitmap = gcnew System::Drawing::Bitmap(openFileDialog1->OpenFile());
+			}	
+
+			m_RecognitionWord = gcnew RecognitionWord(bitmap);
+			pictureBox1->Image = bitmap;
+
+			m_RecognitionWord->ReadPixelsImage();
+			m_RecognitionWord->Skelet();
 
 		 }
 private: System::Void button12_Click_1(System::Object^  sender, System::EventArgs^  e) 
 		 {
 
+		 }
+private: System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) 
+		 {
 		 }
 };
 }

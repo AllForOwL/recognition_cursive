@@ -1,28 +1,34 @@
 #include "RecognitionWord.h"
 
 
-RecognitionWord::RecognitionWord(int width, int height)
+RecognitionWord::RecognitionWord(Bitmap^ imageForRead)
 {
-	m_iWidth = width;
-	m_iHeight = height;
+	f_bitmapForRead = gcnew Bitmap(imageForRead);
+
+	m_iWidth = f_bitmapForRead->Width;
+	m_iHeight = f_bitmapForRead->Height;
 
 	m_arriImage = gcnew array<int, 2>(m_iWidth, m_iHeight);
 }
 
-void RecognitionWord::ReadPixelsImage(String^ pathToBitmap)
+void RecognitionWord::ReadPixelsImage()
 {
-	Bitmap^ f_bitmapForRead = gcnew Bitmap(pathToBitmap);
 	Color f_ColorPixel;
 	int red, green, blue = 0;
-	
 
-	for (int i = 0; i < m_iWidth; i++)
+	for (int i = 200; i < m_iWidth; i++)
 	{
-		for (int j = 0; j < m_iHeight; j++)
+		for (int j = 100; j < m_iHeight; j++)
 		{
 			f_ColorPixel = f_bitmapForRead->GetPixel(i, j);
 
-			if (f_ColorPixel == Color::Black)
+
+			if (
+				Convert::ToInt16(f_ColorPixel.B) != 255 || 
+				Convert::ToInt16(f_ColorPixel.A) != 255 || 
+				Convert::ToInt16(f_ColorPixel.G) != 255 || 
+				Convert::ToInt16(f_ColorPixel.R) != 255
+			   )
 			{
 				this->m_arriImage[i,j] = 1;
 			}
@@ -36,43 +42,82 @@ void RecognitionWord::ReadPixelsImage(String^ pathToBitmap)
 
 void RecognitionWord::Skelet()
 {
-	for (int i = 1; i < m_iWidth-1; i++)
+	int countDeletePixels = 99;
+
+	while (countDeletePixels != 0)
 	{
-		for (int j = 1; j < m_iHeight-1; j++)
+		countDeletePixels = 0;
+		for (int i = 1; i < m_iWidth-1; i++)
 		{
-			if (DeleteCurrentPixels(i, j))
+			for (int j = 1; j < m_iHeight-1; j++)
 			{
-				this->m_arriImage[i,j] = 0;
+				if (DeleteCurrentPixels(i, j, 1))
+				{
+					this->m_arriImage[i,j] = 0;
+					++countDeletePixels;
+				}
+			}
+		}
+		for (int i = 1; i < m_iWidth-1; i++)
+		{
+			for (int j = 1; j < m_iHeight-1; j++)
+			{
+				if (DeleteCurrentPixels(i, j, 2))
+				{
+					this->m_arriImage[i,j] = 0;
+					++countDeletePixels;
+				}
 			}
 		}
 	}
 }
 
-bool RecognitionWord::DeleteCurrentPixels(int x, int y)
+bool RecognitionWord::DeleteCurrentPixels(int x, int y, int countIteration)
 {
-	if (SumSequences(x, y) >= 2 && SumSequences(x, y) < 6)
+	int countTrue = 0;
+
+	if (this->m_arriImage[x,y] == 1)
+	{
+		++countTrue;
+	}
+	if (SumSequences(x, y) >= 2 && SumSequences(x, y) <= 6)
+	{
+		++countTrue;
+	}
+	if (CountSequences(x, y) == 1)
+	{
+		++countTrue;
+	}
+	if (countIteration == 1)
+	{
+		if (this->m_arriImage[x-1,y] * this->m_arriImage[x,y+1] * this->m_arriImage[x+1,y] == 0)
+		{
+			++countTrue;
+		}
+		if (this->m_arriImage[x,y+1] * this->m_arriImage[x+1,y] * this->m_arriImage[x,y-1] == 0)
+		{
+			++countTrue;
+		}
+	}
+	else if (countIteration == 2)
+	{
+		if (this->m_arriImage[x-1,y] * this->m_arriImage[x,y+1] * this->m_arriImage[x,y-1] == 0)
+		{
+			++countTrue;
+		}
+		if (this->m_arriImage[x-1,y+1] * this->m_arriImage[x+1,y] * this->m_arriImage[x,y-1] == 0)
+		{
+			++countTrue;
+		}
+	}
+
+	if (countTrue == 5)
 	{
 		return true;
 	}
-	else if (CountSequences(x, y) == 1)
+	else
 	{
-		return true;
-	}
-	else if (this->m_arriImage[x-1,y] * this->m_arriImage[x,y+1] * this->m_arriImage[x+1,y] == 0)
-	{
-		return true;
-	}
-	else if (this->m_arriImage[x,y+1] * this->m_arriImage[x+1,y] * this->m_arriImage[x,y-1] == 0)
-	{
-		return true;
-	}
-	else if (this->m_arriImage[x-1,y] * this->m_arriImage[x,y+1] * this->m_arriImage[x,y-1] == 0)
-	{
-		return true;
-	}
-	else if (this->m_arriImage[x-1,y+1] * this->m_arriImage[x+1,y] * this->m_arriImage[x,y-1] == 0)
-	{
-		return true;
+		return false;
 	}
 }
 
@@ -84,27 +129,31 @@ int RecognitionWord::CountSequences(int x, int y)
 	{
 		++f_count;
 	}
-	else if (this->m_arriImage[x-1,y+1] == 0 && this->m_arriImage[x,y+1] == 1)
+	if (this->m_arriImage[x-1,y+1] == 0 && this->m_arriImage[x,y+1] == 1)
 	{
 		++f_count;
 	}
-	else if (this->m_arriImage[x,y+1] == 0 && this->m_arriImage[x+1,y+1] == 1)
+	if (this->m_arriImage[x,y+1] == 0 && this->m_arriImage[x+1,y+1] == 1)
 	{
 		++f_count;
 	}
-	else if (this->m_arriImage[x+1,y+1] == 0 && this->m_arriImage[x+1,y] == 1)
+	if (this->m_arriImage[x+1,y+1] == 0 && this->m_arriImage[x+1,y] == 1)
 	{
 		++f_count;
 	}
-	else if (this->m_arriImage[x+1,y] == 0 && this->m_arriImage[x+1,y-1] == 1)
+	if (this->m_arriImage[x+1,y] == 0 && this->m_arriImage[x+1,y-1] == 1)
 	{
 		++f_count;
 	}
-	else if (this->m_arriImage[x+1,y-1] == 0 && this->m_arriImage[x,y-1] == 1)
+	if (this->m_arriImage[x+1,y-1] == 0 && this->m_arriImage[x,y-1] == 1)
 	{
 		++f_count;
 	}
-	else if (this->m_arriImage[x,y-1] == 0 && this->m_arriImage[x-1,y-1] == 1)
+	if (this->m_arriImage[x,y-1] == 0 && this->m_arriImage[x-1,y-1] == 1)
+	{
+		++f_count;
+	}
+	if (this->m_arriImage[x-1,y-1] == 0 && this->m_arriImage[x-1,y] == 1)
 	{
 		++f_count;
 	}

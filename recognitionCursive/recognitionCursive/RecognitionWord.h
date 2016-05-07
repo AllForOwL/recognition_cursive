@@ -9,15 +9,16 @@ using namespace std;
 ref class RecognitionWord
 {
 private:
+	Bitmap^ f_bitmapForRead;
 	array<int, 2>^ m_arriImage;
 	int m_iWidth;
 	int m_iHeight;
 
 public:
-	RecognitionWord		(int width, int height);
-	void ReadPixelsImage(String^ pathToBitmap);
+	RecognitionWord		(Bitmap^ imageForRead);
+	void ReadPixelsImage();
 	void Skelet			();
-	bool DeleteCurrentPixels (int x, int y);  
+	bool DeleteCurrentPixels (int x, int y, int countIteration);  
 	int  CountSequences		 (int x, int y);
 	int  SumSequences	     (int x, int y);
 };
