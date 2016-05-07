@@ -34,7 +34,8 @@ public:
 	array <String^>^ m_arDictionary;
 	Node^ m_nodeRootTree;
 	array<Node^>^ m_arLeaf;
-	int m_iCountWord;
+	int m_iCountWordTree;
+	int m_iCountWordFinaly;
 
 public:
 	OperationFromWords();
@@ -45,6 +46,8 @@ public:
 	void WriteCompressedTree();
 	void WriteFinaleMachine();
 
+
+	void BuildCompressedFinaly();
 	int CountGeneralLetter(String^ key, String^ word);
 	int prefix(String^ x, int n, String^ key, int m); // длина наибольшего общего префикса строк x и key
 	Node^ find(Node^ t, String^ x, int n); // поиск ключа x в дереве t

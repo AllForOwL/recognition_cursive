@@ -8,7 +8,8 @@ using namespace std;
 
 ref class RecognitionWord
 {
-private:
+public:
+	Bitmap^ myBitmap;
 	Bitmap^ f_bitmapForRead;
 	array<int, 2>^ m_arriImage;
 	int m_iWidth;

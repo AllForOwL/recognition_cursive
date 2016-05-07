@@ -19,18 +19,18 @@ namespace recognitionCursive {
 	{
 		public:
 			OperationFromWords^ m_OperationWord;
-			RecognitionWord^    m_RecognitionWord;
+			OperationFromWords^ m_RecognitionWordFinaly;
+	private: System::Windows::Forms::PictureBox^  pictureBox2;
+	public: 
+		RecognitionWord^    m_RecognitionWord;
+		
 
 		formMain(void)
 		{
 			InitializeComponent();
-			
-			this->button1->Click += gcnew
-				System::EventHandler(this, &formMain::button1_Click);
 
-
-			m_OperationWord = gcnew OperationFromWords();
-			
+			m_OperationWord			= gcnew OperationFromWords();
+			m_RecognitionWordFinaly = gcnew OperationFromWords();
 		}
 
 	protected:
@@ -108,9 +108,11 @@ namespace recognitionCursive {
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->textBox9 = (gcnew System::Windows::Forms::TextBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
+			this->pictureBox2 = (gcnew System::Windows::Forms::PictureBox());
 			this->button12 = (gcnew System::Windows::Forms::Button());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->groupBox1->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -301,16 +303,26 @@ namespace recognitionCursive {
 			// 
 			// groupBox1
 			// 
+			this->groupBox1->Controls->Add(this->pictureBox2);
 			this->groupBox1->Controls->Add(this->button12);
 			this->groupBox1->Controls->Add(this->pictureBox1);
 			this->groupBox1->Controls->Add(this->button11);
 			this->groupBox1->Controls->Add(this->textBox9);
 			this->groupBox1->Location = System::Drawing::Point(536, 22);
 			this->groupBox1->Name = L"groupBox1";
-			this->groupBox1->Size = System::Drawing::Size(540, 506);
+			this->groupBox1->Size = System::Drawing::Size(781, 506);
 			this->groupBox1->TabIndex = 22;
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Распознавание";
+			// 
+			// pictureBox2
+			// 
+			this->pictureBox2->Location = System::Drawing::Point(24, 310);
+			this->pictureBox2->Name = L"pictureBox2";
+			this->pictureBox2->Size = System::Drawing::Size(662, 180);
+			this->pictureBox2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
+			this->pictureBox2->TabIndex = 24;
+			this->pictureBox2->TabStop = false;
 			// 
 			// button12
 			// 
@@ -335,7 +347,7 @@ namespace recognitionCursive {
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(1077, 540);
+			this->ClientSize = System::Drawing::Size(1329, 540);
 			this->Controls->Add(this->groupBox1);
 			this->Controls->Add(this->button10);
 			this->Controls->Add(this->button9);
@@ -360,6 +372,7 @@ namespace recognitionCursive {
 			this->Load += gcnew System::EventHandler(this, &formMain::formMain_Load);
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox2))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBox1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -379,7 +392,7 @@ namespace recognitionCursive {
 
 				 readWordFromFile->Close();
 			 }
-			 private: System::Void button12_Click(System::Object^  sender, System::EventArgs^  e)
+private: System::Void button12_Click(System::Object^  sender, System::EventArgs^  e)
 					  {
 						  StreamWriter^ writeWordTree = gcnew StreamWriter("compressedTree.txt", false);
 			 
@@ -397,7 +410,7 @@ private: System::Void button4_Click(System::Object^  sender, System::EventArgs^ 
 
 			 Node^ searchNode = m_OperationWord->find(m_OperationWord->m_nodeRootTree, searchWord, searchWord->Length);
 
-				for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+				for (int j = 0; j <= m_OperationWord->m_iCountWordTree; j++)
 					 {
 						 if (m_OperationWord->m_arDictionary[j] == searchWord)
 						 {
@@ -414,7 +427,7 @@ private: System::Void button5_Click(System::Object^  sender, System::EventArgs^ 
 
 			 Node^ node = m_OperationWord->find(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
 			
-			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+			  for (int j = 0; j <= m_OperationWord->m_iCountWordTree; j++)
 					 {
 						 if (m_OperationWord->m_arDictionary[j] == addWord)
 						 {
@@ -423,12 +436,12 @@ private: System::Void button5_Click(System::Object^  sender, System::EventArgs^ 
 						 }
 					 }
 
-			  m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
-			  ++m_OperationWord->m_iCountWord;
+			  m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWordTree] = addWord;
+			  ++m_OperationWord->m_iCountWordTree;
 
 			  MessageBox::Show("Слово добавлено");
 
-			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+			  for (int j = 0; j <= m_OperationWord->m_iCountWordTree; j++)
 					 {
 						 if (m_OperationWord->m_arDictionary[j] != "")
 						 {
@@ -456,7 +469,7 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 
 			 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, removeStr, removeStr->Length);
 
-			 for (int i = 0; i < m_OperationWord->m_iCountWord; i++)
+			 for (int i = 0; i <= m_OperationWord->m_iCountWordTree; i++)
 			 {
 				 if (m_OperationWord->m_arDictionary[i] == removeStr)
 				 {
@@ -464,7 +477,7 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 
 					 textBox1->Clear();
 
-					 for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 for (int j = 0; j <= m_OperationWord->m_iCountWordTree; j++)
 					 {
 						 if (m_OperationWord->m_arDictionary[j] != "")
 						 {
@@ -480,8 +493,8 @@ private: System::Void button6_Click(System::Object^  sender, System::EventArgs^ 
 
 private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) 
 		 {
-			 	 m_OperationWord->BuildCompressedTree();
-					
+				m_RecognitionWordFinaly->BuildCompressedFinaly();
+			 
 				 StreamReader^ readWordFromFile = gcnew StreamReader("finaly.txt");
 
 				 while (!readWordFromFile->EndOfStream)
@@ -494,47 +507,46 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 		 private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) 
 				  {
 
-					   String^ searchWord = textBox5->Text;
+				   String^ searchWord = textBox2->Text;
 
-					 Node^ searchNode = gcnew Node("",0);
-					 searchNode = nullptr;
+				   Node^ searchNode = m_RecognitionWordFinaly->find(m_RecognitionWordFinaly->m_nodeRootTree, searchWord, searchWord->Length);
 
-					 searchNode = m_OperationWord->find(m_OperationWord->m_nodeRootTree, searchWord, searchWord->Length);
-
-					 if (searchNode != nullptr)
+				   for (int j = 0; j <= m_RecognitionWordFinaly->m_iCountWordFinaly; j++)
 					 {
-						 MessageBox::Show(searchWord);
-					 }
-					 else
-					 {
-						 MessageBox::Show("Слово не найдено");
-					 }
-				  }
-private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) 
-		 {
-			 String^ addWord = textBox6->Text;
-			
-			 Node^ node = m_OperationWord->find(m_OperationWord->m_nodeRootTree, addWord, addWord->Length);
-			
-			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
-					 {
-						 if (m_OperationWord->m_arDictionary[j] == addWord)
+						 if (m_RecognitionWordFinaly->m_arDictionary[j] == searchWord)
 						 {
 								MessageBox::Show("Слово сущевствует");
 								return;
 						 }
 					 }
 
-			  m_OperationWord->m_arDictionary[m_OperationWord->m_iCountWord] = addWord;
-			  ++m_OperationWord->m_iCountWord;
+				MessageBox::Show("Слово не сущевствует");
+				  }
+private: System::Void button7_Click(System::Object^  sender, System::EventArgs^  e) 
+		 {
+			 String^ addWord = textBox6->Text;
+			
+			 Node^ node = m_RecognitionWordFinaly->find(m_RecognitionWordFinaly->m_nodeRootTree, addWord, addWord->Length);
+			
+			  for (int j = 0; j <= m_RecognitionWordFinaly->m_iCountWordFinaly; j++)
+					 {
+						 if (m_RecognitionWordFinaly->m_arDictionary[j] == addWord)
+						 {
+								MessageBox::Show("Слово сущевствует");
+								return;
+						 }
+					 }
+
+			  m_RecognitionWordFinaly->m_arDictionary[m_RecognitionWordFinaly->m_iCountWordFinaly] = addWord;
+			  ++m_RecognitionWordFinaly->m_iCountWordFinaly;
 
 			  MessageBox::Show("Слово добавлено");
 
-			  for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+			  for (int j = 0; j < m_RecognitionWordFinaly->m_iCountWordFinaly; j++)
 					 {
-						 if (m_OperationWord->m_arDictionary[j] != "")
+						 if (m_RecognitionWordFinaly->m_arDictionary[j] != "")
 						 {
-							 textBox8->AppendText(m_OperationWord->m_arDictionary[j] + Environment::NewLine);
+							 textBox8->AppendText(m_RecognitionWordFinaly->m_arDictionary[j] + Environment::NewLine);
 						 }
 					 }
 		 }
@@ -542,21 +554,21 @@ private: System::Void button8_Click(System::Object^  sender, System::EventArgs^ 
 		 {
 			  String^ removeStr = textBox7->Text;
 	
-	 m_OperationWord->remove(m_OperationWord->m_nodeRootTree, removeStr, removeStr->Length);
+			m_RecognitionWordFinaly->remove(m_RecognitionWordFinaly->m_nodeRootTree, removeStr, removeStr->Length);
 
-			 for (int i = 0; i < m_OperationWord->m_iCountWord; i++)
+			 for (int i = 0; i <= m_RecognitionWordFinaly->m_iCountWordFinaly; i++)
 			 {
-				 if (m_OperationWord->m_arDictionary[i] == removeStr)
+				 if (m_RecognitionWordFinaly->m_arDictionary[i] == removeStr)
 				 {
-					 m_OperationWord->m_arDictionary[i] = "";
+					 m_RecognitionWordFinaly->m_arDictionary[i] = "";
 
 					 textBox8->Clear();
 
-					 for (int j = 0; j < m_OperationWord->m_iCountWord; j++)
+					 for (int j = 0; j <= m_RecognitionWordFinaly->m_iCountWordFinaly; j++)
 					 {
-						 if (m_OperationWord->m_arDictionary[j] != "")
+						 if (m_RecognitionWordFinaly->m_arDictionary[j] != "")
 						 {
-							 textBox8->AppendText(m_OperationWord->m_arDictionary[j] + Environment::NewLine);
+							 textBox8->AppendText(m_RecognitionWordFinaly->m_arDictionary[j] + Environment::NewLine);
 						 }
 					 }
 
@@ -631,6 +643,8 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 
 			m_RecognitionWord->ReadPixelsImage();
 			m_RecognitionWord->Skelet();
+
+			pictureBox2->Image = m_RecognitionWord->myBitmap;
 
 		 }
 private: System::Void button12_Click_1(System::Object^  sender, System::EventArgs^  e) 

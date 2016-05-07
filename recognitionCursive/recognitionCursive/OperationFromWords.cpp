@@ -7,7 +7,8 @@ OperationFromWords::OperationFromWords(void)
 
 	String^ text = "¿·‡"; 
 	m_arDictionary[0] = text;
-	m_iCountWord = 0;
+	m_iCountWordTree = 0;
+	m_iCountWordFinaly = 0;
 
 	m_arLeaf = gcnew array<Node^>(CNT_COUNT_WORD);
 	m_nodeRootTree = gcnew Node(text, text->Length);
@@ -39,9 +40,25 @@ void OperationFromWords::BuildCompressedTree()
 
 	while (!ffileReadTree->EndOfStream)
 	{
-		++m_iCountWord;
-		m_arDictionary[m_iCountWord] = ffileReadTree->ReadLine();
-		node = this->insert(m_nodeRootTree, m_arDictionary[m_iCountWord], m_arDictionary[m_iCountWord]->Length);
+		++m_iCountWordTree;
+		m_arDictionary[m_iCountWordTree] = ffileReadTree->ReadLine();
+		node = this->insert(m_nodeRootTree, m_arDictionary[m_iCountWordTree], m_arDictionary[m_iCountWordTree]->Length);
+	}
+
+	ffileReadTree->Close();
+}
+
+void OperationFromWords::BuildCompressedFinaly()
+{
+	StreamReader^ ffileReadTree = gcnew StreamReader("finaly.txt");
+
+	Node^ node;
+
+	while (!ffileReadTree->EndOfStream)
+	{
+		++m_iCountWordFinaly;
+		m_arDictionary[m_iCountWordFinaly] = ffileReadTree->ReadLine();
+		node = this->insert(m_nodeRootTree, m_arDictionary[m_iCountWordFinaly], m_arDictionary[m_iCountWordFinaly]->Length);
 	}
 
 	ffileReadTree->Close();

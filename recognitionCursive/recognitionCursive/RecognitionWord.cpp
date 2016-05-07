@@ -8,7 +8,9 @@ RecognitionWord::RecognitionWord(Bitmap^ imageForRead)
 	m_iWidth = f_bitmapForRead->Width;
 	m_iHeight = f_bitmapForRead->Height;
 
-	m_arriImage = gcnew array<int, 2>(m_iWidth, m_iHeight);
+	myBitmap = gcnew Bitmap(m_iWidth, m_iHeight);
+
+	m_arriImage = gcnew array<int, 2>(m_iWidth, m_iHeight);   
 }
 
 void RecognitionWord::ReadPixelsImage()
@@ -16,18 +18,15 @@ void RecognitionWord::ReadPixelsImage()
 	Color f_ColorPixel;
 	int red, green, blue = 0;
 
-	for (int i = 200; i < m_iWidth; i++)
+	for (int i = 0; i < m_iWidth; i++)
 	{
-		for (int j = 100; j < m_iHeight; j++)
+		for (int j = 0; j < m_iHeight; j++)
 		{
 			f_ColorPixel = f_bitmapForRead->GetPixel(i, j);
 
 
 			if (
-				Convert::ToInt16(f_ColorPixel.B) != 255 || 
-				Convert::ToInt16(f_ColorPixel.A) != 255 || 
-				Convert::ToInt16(f_ColorPixel.G) != 255 || 
-				Convert::ToInt16(f_ColorPixel.R) != 255
+				Convert::ToInt16(f_ColorPixel.B) < 20
 			   )
 			{
 				this->m_arriImage[i,j] = 1;
@@ -70,6 +69,24 @@ void RecognitionWord::Skelet()
 			}
 		}
 	}
+
+	
+
+    for (int x = 0; x < m_iWidth; x++)
+    {
+        for (int y = 0; y < m_iHeight; y++)
+        {
+			if (m_arriImage[x,y] == 0)
+			{
+				myBitmap->SetPixel(x, y, Color::White);
+			}
+			else 
+			{
+				myBitmap->SetPixel(x, y, Color::Black);
+			}
+           
+        }
+    }
 }
 
 bool RecognitionWord::DeleteCurrentPixels(int x, int y, int countIteration)
