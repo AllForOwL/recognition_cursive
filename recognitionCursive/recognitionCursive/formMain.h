@@ -21,6 +21,7 @@ namespace recognitionCursive {
 			OperationFromWords^ m_OperationWord;
 			OperationFromWords^ m_RecognitionWordFinaly;
 	private: System::Windows::Forms::PictureBox^  pictureBox2;
+
 	public: 
 		RecognitionWord^    m_RecognitionWord;
 		
@@ -642,9 +643,62 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 			pictureBox1->Image = bitmap;
 
 			m_RecognitionWord->ReadPixelsImage();
-			m_RecognitionWord->Skelet();
+			//m_RecognitionWord->Skelet();
 			m_RecognitionWord->FindScopeWord();
-		//	m_RecognitionWord->FindScopeLetters();
+
+			array<int>^ f_arriCountBlackPixels = gcnew array<int>(m_RecognitionWord->m_stScopeWord.xEnd - m_RecognitionWord->m_stScopeWord.xBegin);
+			int countColsBlackPixels = 0;
+
+			for (int x = m_RecognitionWord->m_stScopeWord.xBegin; x < m_RecognitionWord->m_stScopeWord.xEnd; x++)
+			{
+				for (int y = m_RecognitionWord->m_stScopeWord.yBegin; y < m_RecognitionWord->m_stScopeWord.yEnd; y++)
+				{
+					if (m_RecognitionWord->m_arriImage[x,y] == 1)
+					{
+						++f_arriCountBlackPixels[countColsBlackPixels];
+					}
+				}
+			++countColsBlackPixels;
+			}
+
+			int distance;
+
+			for (int i = 0; i < f_arriCountBlackPixels->Length; i++)
+			{
+				if (f_arriCountBlackPixels[i] <= 4)
+				{
+					for (int j = m_RecognitionWord->m_stScopeWord.yBegin; j < m_RecognitionWord->m_stScopeWord.yEnd; j++)
+					{
+						m_RecognitionWord->m_arriImage[m_RecognitionWord->m_stScopeWord.xBegin + i, j] = 0;
+					}
+				}
+			}
+		
+			m_RecognitionWord->Skelet();
+		
+			for (int x = 0; x < m_RecognitionWord->m_iWidth; x++)
+			{
+				for (int y = 0; y < m_RecognitionWord->m_iHeight; y++)
+				{
+					if (m_RecognitionWord->m_arriImage[x,y] == 0)
+					{
+						m_RecognitionWord->myBitmap->SetPixel(x, y, Color::White);
+					}
+					else 
+					{
+						m_RecognitionWord->myBitmap->SetPixel(x, y, Color::Black);
+					}
+           
+				}
+			}
+			
+			/*for (int i = 0; i < f_arriCountBlackPixels->Length; i++)
+			{
+				++dataGridView1->ColumnCount;
+				dataGridView1->Rows[0]->Cells[i]->Value = f_arriCountBlackPixels[i].ToString();
+			}
+			*/
+			//m_RecognitionWord->FindScopeLetters();
 
 			pictureBox2->Image = m_RecognitionWord->myBitmap;
 

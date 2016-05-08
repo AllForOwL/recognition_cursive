@@ -72,8 +72,6 @@ void RecognitionWord::Skelet()
 		}
 	}
 
-	
-
     for (int x = 0; x < m_iWidth; x++)
     {
         for (int y = 0; y < m_iHeight; y++)
@@ -297,59 +295,96 @@ void RecognitionWord::FindScopeEndWord()
 
 void RecognitionWord::FindScopeLetters()
 {
-	array<SScopeWord^>^ f_arrstScopeLEtters = gcnew array<SScopeWord^>(COUNT_LETTERS);
+	array<SScopeWord^>^ f_arrstScopeLEtters = gcnew array<SScopeWord^>(COUNT_LETTERS*2);
 	int counLetter = 0;
 
-	f_arrstScopeLEtters[counLetter] = FindScopeLetter(this->m_stScopeWord.yBegin);
+	/*f_arrstScopeLEtters[counLetter] = FindScopeLetter(this->m_stScopeWord.xBegin);
 
+	for (int x = f_arrstScopeLEtters[counLetter]->xBegin; x < f_arrstScopeLEtters[counLetter]->xEnd; x++)
+	{
+		myBitmap->SetPixel(x, f_arrstScopeLEtters[counLetter]->yBegin, Color::Blue);
+	}
+	for (int x = f_arrstScopeLEtters[counLetter]->xBegin; x < f_arrstScopeLEtters[counLetter]->xEnd; x++)
+	{
+		myBitmap->SetPixel(x, f_arrstScopeLEtters[counLetter]->yEnd, Color::Blue);
+	}
+	
+	*/
 	/*do 
 	{
 		++counLetter;
 
-		f_arrstScopeLEtters[counLetter] = FindScopeLetter(f_arrstScopeLEtters[counLetter-1]->yEnd+1);
+		f_arrstScopeLEtters[counLetter] = FindScopeLetter(f_arrstScopeLEtters[counLetter-1]->xEnd+1);
 
 	}
-	while(f_arrstScopeLEtters[counLetter]->xEnd < this->m_stScopeWord.xEnd);
+	while(counLetter < 10);
 	*/
-	/*for (int i = 0; i < counLetter; i++)
+
+	int current_X = this->m_stScopeWord.xBegin;
+	int current_Y_Top = this->m_stScopeWord.yBegin;
+	int current_Y_Bottom = this->m_stScopeWord.yEnd;
+
+	for (int j = 0; j < 10; j++)
 	{
-		this->myBitmap->SetPixel(f_arrstScopeLEtters[i]->xBegin, f_arrstScopeLEtters[i]->yBegin, Color::Red);
-		this->myBitmap->SetPixel(f_arrstScopeLEtters[i]->xEnd, f_arrstScopeLEtters[i]->yEnd, Color::Red);
+		current_X += 2;
+		for (int i = 0; i < 60; i++)
+		{
+			this->myBitmap->SetPixel(++current_X, current_Y_Top, Color::Blue);
+			this->myBitmap->SetPixel(++current_X, current_Y_Bottom, Color::Blue);
+		}
 	}
-	*/
+}
+
+void RecognitionWord::SeparationLetters()
+{
+	FindScopeWord();
+	
+	array<int>^ f_arriCountBlackPixels = gcnew array<int>(this->m_stScopeWord.xEnd - this->m_stScopeWord.xBegin);
+	int countColsBlackPixels = 0;
+
+	for (int x = this->m_stScopeWord.xBegin; x < this->m_stScopeWord.xEnd; x++)
+	{
+		for (int y = this->m_stScopeWord.yBegin; y < this->m_stScopeWord.yEnd; y++)
+		{
+			if (this->m_arriImage[x,y] == 1)
+			{
+				++f_arriCountBlackPixels[countColsBlackPixels];
+			}
+		}
+		++countColsBlackPixels;
+	}
 }
 
 SScopeWord^ RecognitionWord::FindScopeLetter(int beginNextLetter)
 {
 	int f_iSumPrevRows, f_iSumCurrentRows = 0;
+	int f_iSumPreCols, f_iSumCurrentCols = 0;
 
 	SScopeWord^ f_stScopeLetter = gcnew SScopeWord();
 
-	for (int x = this->m_stScopeWord.xBegin; x < this->m_stScopeWord.xEnd; x++)	// find rows begin letter
+	for (int x = beginNextLetter; x < this->m_stScopeWord.xEnd; x++)	// find rows begin letter
 	{
-		f_iSumCurrentRows = 0;
-		for (int y = beginNextLetter; y < this->m_stScopeWord.yEnd; y++)
+		f_iSumCurrentCols = 0;
+		for (int y = this->m_stScopeWord.yBegin; y < this->m_stScopeWord.yEnd; y++)
 		{
 			if (this->m_arriImage[x,y] == 1)
 			{
-				++f_iSumCurrentRows;
+				++f_iSumCurrentCols;
 			}
 		}
-		
-		if (f_iSumCurrentRows >= COOUNT_PIXELS)
+		if (f_iSumCurrentCols >= COUNT_PIXELS_LETTER)
 		{
 			f_stScopeLetter->xBegin = x;
 			break;
 		}
-		f_iSumPrevRows = f_iSumCurrentRows;
 	}
 
-	int f_iSumPreCols, f_iSumCurrentCols = 0;
+	int iter = 0;
 
-	for (int y = beginNextLetter; y < this->m_stScopeWord.yEnd; y++)	// find cols begin letter
+	for (int x = f_stScopeLetter->xBegin; x < this->m_stScopeWord.xEnd; x++)	// find rows end letter
 	{
 		f_iSumCurrentCols = 0;
-		for (int x = this->m_stScopeWord.xBegin; x < this->m_stScopeWord.xEnd; x++)
+		for (int y = beginNextLetter; y < this->m_stScopeWord.yEnd; y++)
 		{
 			if (this->m_arriImage[x,y] == 1)
 			{
@@ -357,19 +392,18 @@ SScopeWord^ RecognitionWord::FindScopeLetter(int beginNextLetter)
 			}
 		}
 		
-		if (f_iSumCurrentCols  >= COOUNT_PIXELS)
+		if (f_iSumCurrentCols <= 1 && iter >= 40)
 		{
-			f_stScopeLetter->yBegin = y;
+			f_stScopeLetter->xEnd = x-1;
 			break;
 		}
+		++iter;
 	}
 
-//	int f_iSumPrevRows, f_iSumCurrentRows = 0;
-
-	for (int x = this->m_stScopeWord.xEnd; x > this->m_stScopeWord.xBegin; x--)	// find rows end word
+	for (int y = 0; y < this->m_stScopeWord.yEnd; y++)	// find cols begin letter
 	{
 		f_iSumCurrentRows = 0;
-		for (int y = this->m_stScopeWord.yBegin; y < this->m_stScopeWord.yEnd; ++y)
+		for (int x = f_stScopeLetter->xBegin; x < f_stScopeLetter->xEnd; x++)
 		{
 			if (this->m_arriImage[x,y] == 1)
 			{
@@ -377,40 +411,38 @@ SScopeWord^ RecognitionWord::FindScopeLetter(int beginNextLetter)
 			}
 		}
 		
-		if (f_iSumCurrentRows <= COOUNT_PIXELS)
+		if (f_iSumCurrentRows >= COUNT_PIXELS_LETTER)
 		{
-			f_stScopeLetter->xEnd = x-1;
+			f_stScopeLetter->yBegin = y;
 			break;
 		}
+
 		f_iSumPrevRows = f_iSumCurrentRows;
 	}
 
-//	int f_iSumPreCols, f_iSumCurrentCols = 0;
-
-	for (int y = f_stScopeLetter->yBegin; y < this->m_stScopeWord.yEnd; y++)	// find cols end word
+	for (int y = f_stScopeLetter->yBegin; y < this->m_iHeight; y++)	// find rows end letter
 	{
-		f_iSumCurrentCols = 0;
+		f_iSumCurrentRows = 0;
 		for (int x = f_stScopeLetter->xBegin; x < f_stScopeLetter->xEnd; x++)
 		{
 			if (this->m_arriImage[x,y] == 1)
 			{
-				++f_iSumCurrentCols;
+				++f_iSumCurrentRows;
 			}
 		}
 		
-		if (f_iSumPreCols - f_iSumCurrentCols  >= COOUNT_PIXELS)
+		if (f_iSumCurrentRows == 0)
 		{
 			f_stScopeLetter->yEnd = y-1;
 			break;
 		}
 
-		f_iSumPreCols = f_iSumCurrentCols;
+		f_iSumPrevRows = f_iSumCurrentRows;
 	}
 
 	return f_stScopeLetter;
 
 }
-
 ArrayList^ RecognitionWord::Fourier(const int** scopeLetter)
 {
 	return gcnew ArrayList;

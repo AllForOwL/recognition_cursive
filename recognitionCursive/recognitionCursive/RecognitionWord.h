@@ -9,6 +9,7 @@ using namespace std;
 
 const int COUNT_LETTERS = 20;
 const int COOUNT_PIXELS = 10;
+const int COUNT_PIXELS_LETTER = 10;
 
 ref struct SScopeWord
 {
@@ -54,6 +55,7 @@ public:
 	// поиск границы букв слова
 	void FindScopeLetters();
 	SScopeWord^ FindScopeLetter(int beginNextLetter);
+	void SeparationLetters();
 
 	ArrayList^ Fourier(const int** scopeLetter);
 
