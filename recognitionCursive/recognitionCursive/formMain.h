@@ -643,6 +643,8 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 
 			m_RecognitionWord->ReadPixelsImage();
 			m_RecognitionWord->Skelet();
+			m_RecognitionWord->FindScopeWord();
+		//	m_RecognitionWord->FindScopeLetters();
 
 			pictureBox2->Image = m_RecognitionWord->myBitmap;
 
