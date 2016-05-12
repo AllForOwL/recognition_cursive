@@ -643,39 +643,113 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 			pictureBox1->Image = bitmap;
 
 			m_RecognitionWord->ReadPixelsImage();
-			//m_RecognitionWord->Skelet();
 			m_RecognitionWord->FindScopeWord();
+			//m_RecognitionWord->Skelet();
 
-			array<int>^ f_arriCountBlackPixels = gcnew array<int>(m_RecognitionWord->m_stScopeWord.xEnd - m_RecognitionWord->m_stScopeWord.xBegin);
-			int countColsBlackPixels = 0;
+			
 
-			for (int x = m_RecognitionWord->m_stScopeWord.xBegin; x < m_RecognitionWord->m_stScopeWord.xEnd; x++)
+
+			array<int>^ arrMaxValue = gcnew array<int>(20);
+
+			/*for (int x = 0; x < 8; x++)
 			{
-				for (int y = m_RecognitionWord->m_stScopeWord.yBegin; y < m_RecognitionWord->m_stScopeWord.yEnd; y++)
+
+			int x_begin = m_RecognitionWord->m_stScopeWord.xBegin;
+			int x_end   = m_RecognitionWord->m_stScopeWord.xEnd;
+			int y_begin = m_RecognitionWord->m_stScopeWord.yBegin;
+			int y_end   = m_RecognitionWord->m_stScopeWord.yEnd;
+			int colsMoreBlackPixels = 0;
+			int countPixels = 0;
+			int maxCellsBlackPixels = 0;
+			int countElementArray = 0;
+
+
+
+
+			array<int>^ arrCountBlackPixelsCells = gcnew array<int>(x_end - x_begin);
+
+			for (int i = x_begin; i < x_end; i++)
+			{
+				countPixels = 0;
+				for (int j = y_begin; j < y_end; j++)
 				{
-					if (m_RecognitionWord->m_arriImage[x,y] == 1)
+					if (m_RecognitionWord->m_arriImage[i,j] == 1)
 					{
-						++f_arriCountBlackPixels[countColsBlackPixels];
+						++countPixels;
 					}
 				}
-			++countColsBlackPixels;
-			}
 
-			int distance;
+				bool ok = true;
 
-			for (int i = 0; i < f_arriCountBlackPixels->Length; i++)
-			{
-				if (f_arriCountBlackPixels[i] <= 4)
+				for (int v = 0; v < x; v++)
 				{
-					for (int j = m_RecognitionWord->m_stScopeWord.yBegin; j < m_RecognitionWord->m_stScopeWord.yEnd; j++)
+					if (countPixels == arrMaxValue[v])
 					{
-						m_RecognitionWord->m_arriImage[m_RecognitionWord->m_stScopeWord.xBegin + i, j] = 0;
+						ok = false;
 					}
 				}
+				if (countPixels > maxCellsBlackPixels && ok)
+				{
+					maxCellsBlackPixels = countPixels;
+					colsMoreBlackPixels = i;
+				}
+				arrCountBlackPixelsCells[countElementArray] = countPixels;
+				++countElementArray;
 			}
-		
-			m_RecognitionWord->Skelet();
-		
+
+			arrMaxValue[x] = maxCellsBlackPixels;
+
+			int countLeftCells  = 0;
+			int countRightCells = 0;
+	
+			int countCurrCells = colsMoreBlackPixels-x_begin;
+			--countCurrCells;
+			int countNextCells = countCurrCells-1;
+			int o = 0;
+
+			while (arrCountBlackPixelsCells[countCurrCells] >= arrCountBlackPixelsCells[countNextCells] || 
+				   arrCountBlackPixelsCells[countNextCells] >= 5 ||
+				   arrCountBlackPixelsCells[countCurrCells] - arrCountBlackPixelsCells[countNextCells] >= -5)
+			{
+				++o;
+				--countCurrCells;
+				--countNextCells;
+				if (countNextCells == 0)
+				{
+					break;
+				}
+			} 
+			
+			countLeftCells = countCurrCells;
+
+			countCurrCells = colsMoreBlackPixels-x_begin;
+			++countCurrCells;
+			countNextCells = countCurrCells+1;
+			o = 0;
+			while (arrCountBlackPixelsCells[countCurrCells] >= arrCountBlackPixelsCells[countNextCells] || 
+				arrCountBlackPixelsCells[countNextCells] >= 5 ||
+				   arrCountBlackPixelsCells[countCurrCells] - arrCountBlackPixelsCells[countNextCells] >= -5
+				)
+			{++o;
+				++countCurrCells;
+				++countNextCells;
+				if (countNextCells == countElementArray-1)
+				{
+					break;
+				}
+			} 
+			
+			countRightCells = countCurrCells;
+
+			countLeftCells += x_begin;
+			countRightCells += x_begin;
+
+
+			m_RecognitionWord->m_arriImage[countLeftCells, y_begin] = 3;
+			m_RecognitionWord->m_arriImage[countRightCells, y_begin] = 3;
+
+
+
 			for (int x = 0; x < m_RecognitionWord->m_iWidth; x++)
 			{
 				for (int y = 0; y < m_RecognitionWord->m_iHeight; y++)
@@ -684,13 +758,191 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 					{
 						m_RecognitionWord->myBitmap->SetPixel(x, y, Color::White);
 					}
-					else 
+					else if (m_RecognitionWord->m_arriImage[x,y] == 1)
 					{
 						m_RecognitionWord->myBitmap->SetPixel(x, y, Color::Black);
+					}
+					else if (m_RecognitionWord->m_arriImage[x,y] == 3)
+					{
+						for (int j = 0; j < m_RecognitionWord->m_iHeight; j++)
+							m_RecognitionWord->myBitmap->SetPixel(x, j, Color::Red);
 					}
            
 				}
 			}
+
+
+
+			for (int i = 0; i < arrCountBlackPixelsCells->Length; i++)
+			{
+				if (arrCountBlackPixelsCells[i] == maxCellsBlackPixels)
+				{
+					arrCountBlackPixelsCells[i]  = -1;
+				}
+			}
+
+			}
+
+
+
+
+			*/
+
+				//m_RecognitionWord->Skelet();
+			
+			array<int>^ f_arriCountBlackPixels = gcnew array<int>(m_RecognitionWord->m_stScopeWord.xEnd - m_RecognitionWord->m_stScopeWord.xBegin);
+			int countColsBlackPixels = 0;
+			int f_iMinValueBlackPixels = 99;
+			int y_to = (m_RecognitionWord->m_stScopeWord.yEnd-m_RecognitionWord->m_stScopeWord.yBegin) / 2;
+
+			for (int x = m_RecognitionWord->m_stScopeWord.xBegin; x < m_RecognitionWord->m_stScopeWord.xEnd; x++)
+			{
+				for (int y = m_RecognitionWord->m_stScopeWord.yBegin; y < m_RecognitionWord->m_stScopeWord.xBegin + y_to; y++)
+				{
+					if (m_RecognitionWord->m_arriImage[x,y] == 1)
+					{
+						++f_arriCountBlackPixels[countColsBlackPixels];
+					}
+				}
+
+				if (f_arriCountBlackPixels[countColsBlackPixels] == 0)
+				{
+					f_iMinValueBlackPixels = f_arriCountBlackPixels[countColsBlackPixels];
+				}
+				
+			++countColsBlackPixels;
+			}
+			
+			++f_iMinValueBlackPixels;
+
+			//array<int>^ distance = gcnew array<int>(countColsBlackPixels);
+			//int countDistance = 0;
+
+
+			ArrayList^ listMinValueBlackPixels = gcnew ArrayList();
+			ArrayList^ listDistance = gcnew ArrayList();
+
+			int countOnePixel = 0, countSecondPixel = 0;
+
+			int x_end = m_RecognitionWord->m_stScopeWord.xEnd;
+
+			int differenceRows = 0;
+			int countRows = 0;
+
+			for (int i = 0; i < f_arriCountBlackPixels->Length; i++)
+			{
+				if (f_arriCountBlackPixels[i] == 0)
+				{
+					//if (countRows == 0 || countRows == 25)
+					//{
+						listMinValueBlackPixels->Add(i);
+					
+						//countRows = 0;
+					//}	
+					//++countRows;
+
+						//int zeroRows = i;
+						do
+						{
+							++i;
+						}
+						while(f_arriCountBlackPixels[i] == 0);
+				}
+			}
+
+			int x_begin = m_RecognitionWord->m_stScopeWord.xBegin;
+			int y_begin = m_RecognitionWord->m_stScopeWord.yBegin;
+			int y_end   = m_RecognitionWord->m_stScopeWord.yEnd;
+
+			int prev_x = 0;
+
+			for (int i = 0; i < listMinValueBlackPixels->Count; i++)
+			{
+				if (prev_x != 0)
+				{
+					if (Convert::ToInt32(listMinValueBlackPixels[i]) - prev_x >= 40)
+					{
+						for (int j = y_begin; j < y_end; j++)
+						{
+							m_RecognitionWord->m_arriImage[x_begin + Convert::ToInt32(listMinValueBlackPixels[i]), j] = 2;
+							prev_x = Convert::ToInt32(listMinValueBlackPixels[i]);
+						}
+					}
+				}
+				else
+				{
+					for (int j = y_begin; j < y_end; j++)
+					{
+						m_RecognitionWord->m_arriImage[x_begin + Convert::ToInt32(listMinValueBlackPixels[i]), j] = 2;
+						prev_x = Convert::ToInt32(listMinValueBlackPixels[i]);
+					}
+				}
+			}
+			
+			int end    = x_end - Convert::ToInt32(listMinValueBlackPixels[0]);
+			int begin  = x_begin + Convert::ToInt32(listMinValueBlackPixels[0]);
+			int change = Convert::ToInt32(listMinValueBlackPixels[0]);
+
+			/*for (int i = end; i > begin; i-=change)
+			{
+				int tempRows = x_end;
+				if (f_arriCountBlackPixels[tempRows] - f_iMinValueBlackPixels == 0)
+				{
+					while (f_arriCountBlackPixels[tempRows] - f_iMinValueBlackPixels != 1)
+					{
+						--tempRows;
+					}
+
+					for (int j = y_begin; j < y_end; j++)
+					{
+						m_RecognitionWord->m_arriImage[x_begin + tempRows, j] = 2;
+					}
+				}
+				else 
+				{
+					for (int j = y_begin; j < y_end; j++)
+					{
+						m_RecognitionWord->m_arriImage[i, j] = 2;
+					}
+				}
+			}
+			*/
+			for (int x = 0; x < m_RecognitionWord->m_iWidth; x++)
+			{
+				for (int y = 0; y < m_RecognitionWord->m_iHeight; y++)
+				{
+					if (m_RecognitionWord->m_arriImage[x,y] == 0)
+					{
+						m_RecognitionWord->myBitmap->SetPixel(x, y, Color::White);
+					}
+					else if (m_RecognitionWord->m_arriImage[x,y] == 1)
+					{
+						m_RecognitionWord->myBitmap->SetPixel(x, y, Color::Black);
+					}
+					else if (m_RecognitionWord->m_arriImage[x,y] == 2)
+					{
+						for (int j = 0; j < m_RecognitionWord->m_iHeight; j++)
+							m_RecognitionWord->myBitmap->SetPixel(x, j, Color::Red);
+					}
+           
+				}
+			}
+
+
+			m_RecognitionWord->Skelet();
+
+			for (int x = m_RecognitionWord->m_stScopeWord.xBegin; x < m_RecognitionWord->m_stScopeWord.xEnd; x++)
+			{
+				m_RecognitionWord->myBitmap->SetPixel(x, m_RecognitionWord->m_stScopeWord.yBegin, Color::Red);
+			}
+
+			for (int x = m_RecognitionWord->m_stScopeWord.xBegin; x < m_RecognitionWord->m_stScopeWord.xEnd; x++)
+			{
+				m_RecognitionWord->myBitmap->SetPixel(x, m_RecognitionWord->m_stScopeWord.yEnd,   Color::Red);
+			}
+
+
+			pictureBox2->Image = m_RecognitionWord->myBitmap;
 			
 			/*for (int i = 0; i < f_arriCountBlackPixels->Length; i++)
 			{
@@ -700,9 +952,7 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 			*/
 			//m_RecognitionWord->FindScopeLetters();
 
-			pictureBox2->Image = m_RecognitionWord->myBitmap;
-
-		 }
+}
 private: System::Void button12_Click_1(System::Object^  sender, System::EventArgs^  e) 
 		 {
 

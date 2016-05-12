@@ -43,28 +43,32 @@ void RecognitionWord::ReadPixelsImage()
 
 void RecognitionWord::Skelet()
 {
+	array<int>^ arrCountDeletePixels = gcnew array<int>(this->m_iWidth);
+
 	int countDeletePixels = 99;
 
 	while (countDeletePixels != 0)
 	{
 		countDeletePixels = 0;
-		for (int i = 1; i < m_iWidth-1; i++)
-		{
+		  for (int i = 1; i < m_iWidth-1; i++)
+		  {
 			for (int j = 1; j < m_iHeight-1; j++)
-			{
+				{
 				if (DeleteCurrentPixels(i, j, 1))
 				{
+					++arrCountDeletePixels[i-1];
 					this->m_arriImage[i,j] = 0;
 					++countDeletePixels;
 				}
 			}
 		}
-		for (int i = 1; i < m_iWidth-1; i++)
+	   for (int i = 1; i < m_iWidth-1; i++)
 		{
-			for (int j = 1; j < m_iHeight-1; j++)
-			{
+        for (int j = 1; j < m_iHeight-1; j++)
+        {
 				if (DeleteCurrentPixels(i, j, 2))
 				{
+					++arrCountDeletePixels[i-1];
 					this->m_arriImage[i,j] = 0;
 					++countDeletePixels;
 				}
@@ -72,17 +76,22 @@ void RecognitionWord::Skelet()
 		}
 	}
 
-    for (int x = 0; x < m_iWidth; x++)
+    for (int x = 1; x < m_iWidth-1; x++)
     {
-        for (int y = 0; y < m_iHeight; y++)
+        for (int y = 1; y < m_iHeight-1; y++)
         {
 			if (m_arriImage[x,y] == 0)
 			{
 				myBitmap->SetPixel(x, y, Color::White);
 			}
-			else 
+			else if (m_arriImage[x,y] == 1)
 			{
 				myBitmap->SetPixel(x, y, Color::Black);
+			}
+			else if (m_arriImage[x,y] == 2)
+			{
+				for (int j = 0; j < m_iHeight; j++)
+					myBitmap->SetPixel(x, j, Color::Red);
 			}
            
         }
@@ -190,7 +199,7 @@ void RecognitionWord::FindScopeWord()
 	this->FindScopeBeginWord();
 	this->FindScopeEndWord();
 
-	for (int x = this->m_stScopeWord.xBegin; x < this->m_stScopeWord.xEnd; x++)
+	/*for (int x = this->m_stScopeWord.xBegin; x < this->m_stScopeWord.xEnd; x++)
 	{
 		myBitmap->SetPixel(x, this->m_stScopeWord.yBegin, Color::Red);
 	}
@@ -198,7 +207,7 @@ void RecognitionWord::FindScopeWord()
 	for (int x = this->m_stScopeWord.xBegin; x < this->m_stScopeWord.xEnd; x++)
 	{
 		myBitmap->SetPixel(x, this->m_stScopeWord.yEnd,   Color::Red);
-	}
+	}*/
 
 }
 
@@ -337,22 +346,7 @@ void RecognitionWord::FindScopeLetters()
 
 void RecognitionWord::SeparationLetters()
 {
-	FindScopeWord();
 	
-	array<int>^ f_arriCountBlackPixels = gcnew array<int>(this->m_stScopeWord.xEnd - this->m_stScopeWord.xBegin);
-	int countColsBlackPixels = 0;
-
-	for (int x = this->m_stScopeWord.xBegin; x < this->m_stScopeWord.xEnd; x++)
-	{
-		for (int y = this->m_stScopeWord.yBegin; y < this->m_stScopeWord.yEnd; y++)
-		{
-			if (this->m_arriImage[x,y] == 1)
-			{
-				++f_arriCountBlackPixels[countColsBlackPixels];
-			}
-		}
-		++countColsBlackPixels;
-	}
 }
 
 SScopeWord^ RecognitionWord::FindScopeLetter(int beginNextLetter)
@@ -443,6 +437,7 @@ SScopeWord^ RecognitionWord::FindScopeLetter(int beginNextLetter)
 	return f_stScopeLetter;
 
 }
+
 ArrayList^ RecognitionWord::Fourier(const int** scopeLetter)
 {
 	return gcnew ArrayList;
