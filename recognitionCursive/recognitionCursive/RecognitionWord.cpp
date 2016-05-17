@@ -1,3 +1,5 @@
+#include <complex>
+
 #include "RecognitionWord.h"
 
 RecognitionWord::RecognitionWord(Bitmap^ imageForRead)
@@ -438,7 +440,47 @@ SScopeWord^ RecognitionWord::FindScopeLetter(int beginNextLetter)
 
 }
 
-/*array<double>^ RecognitionWord::Fourier(int countLetters)
+ArrayList^ RecognitionWord::Fourier(int beginLetter, int endLetter)
 {
-	return gcnew array<double^>;
-}*/
+	array<PointContour^>^ f_arrlsContourLetter = gcnew array<PointContour^>(100);
+	f_arrlsContourLetter = FindContourLetter(beginLetter, endLetter);
+
+	int countElementContour = f_arrlsContourLetter->Length;
+	double valueVector;
+	int temp_x, temp_y;
+	ArrayList^ f_arrlsVectorFourier = gcnew ArrayList();
+	for (int i = 0; i < f_arrlsContourLetter->Length; i++)
+	{
+		temp_x = f_arrlsContourLetter[i]->x;
+		temp_y = f_arrlsContourLetter[i]->y;
+		std::complex<double> coordinate(temp_x, temp_y);
+		valueVector = std::arg(coordinate) * exp(-temp_y * ((2 * 3.14)/countElementContour)* (i*i));
+		f_arrlsVectorFourier->Add(valueVector);
+	}
+
+	return f_arrlsVectorFourier;
+}
+
+array<PointContour^>^ RecognitionWord::FindContourLetter(int beginLetter, int endLetter)
+{
+	array<PointContour^>^ f_arrlsContourLetter = gcnew array<PointContour^>(100);
+	int countElement = 0;
+	PointContour^ pointContour = gcnew PointContour();
+
+	for (int i = beginLetter; i <= endLetter; i++)
+	{
+		for (int j = this->m_stScopeWord.yBegin; j < this->m_stScopeWord.yEnd; j++)
+		{
+			if (this->m_arriImage[i,j] == 1)
+			{
+				pointContour->x = i;
+				pointContour->y = j;
+				f_arrlsContourLetter[countElement] = pointContour;
+
+				++countElement;
+			}
+		}
+	}
+
+	return f_arrlsContourLetter;
+}

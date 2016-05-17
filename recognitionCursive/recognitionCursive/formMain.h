@@ -741,9 +741,15 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 				// draw horisontal lines }
 			// draw lines where end letter }
 
-
-
 			pictureBox2->Image = m_RecognitionWord->myBitmap;
+
+			// { count Fourier for letters
+				for (int i = 0; i < f_arrlsBorderLetters->Count-1; i++)
+				{
+					ArrayList^ f_arrlsVectorFourier = m_RecognitionWord->Fourier(Convert::ToInt32(f_arrlsBorderLetters[i]), Convert::ToInt32(f_arrlsBorderLetters[i+1]));
+					// here has been neural network
+				}
+			// count Fourier for letters }
 }
 private: System::Void button12_Click_1(System::Object^  sender, System::EventArgs^  e) 
 		 {

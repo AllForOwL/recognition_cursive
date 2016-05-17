@@ -24,6 +24,17 @@ ref struct SScopeWord
 	}
 };
 
+ref struct PointContour
+{
+	int x, y;
+
+	PointContour()
+	{
+		x = 0;
+		y   = 0;
+	}
+};
+
 ref class RecognitionWord
 {
 public:
@@ -57,7 +68,8 @@ public:
 	SScopeWord^ FindScopeLetter(int beginNextLetter);
 	void SeparationLetters();
 
-	//array<double>^ Fourier(int countLetters);
+	ArrayList^ Fourier(int beginLetter, int endLetter);
+	array<PointContour^>^ FindContourLetter(int beginLetter, int endLetter);
 
 };
 
