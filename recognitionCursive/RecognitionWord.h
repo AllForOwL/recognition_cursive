@@ -57,7 +57,7 @@ public:
 	SScopeWord^ FindScopeLetter(int beginNextLetter);
 	void SeparationLetters();
 
-	//array<double>^ Fourier(int countLetters);
+	ArrayList^ Fourier(const int** scopeLetter);
 
 };
 

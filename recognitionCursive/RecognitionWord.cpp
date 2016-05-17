@@ -438,7 +438,7 @@ SScopeWord^ RecognitionWord::FindScopeLetter(int beginNextLetter)
 
 }
 
-/*array<double>^ RecognitionWord::Fourier(int countLetters)
+ArrayList^ RecognitionWord::Fourier(const int** scopeLetter)
 {
-	return gcnew array<double^>;
-}*/
+	return gcnew ArrayList;
+}
