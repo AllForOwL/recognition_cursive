@@ -16,5 +16,9 @@ ref class Neuron
 
 	public:
 		Neuron();
+		void LocalField();
+		void SignalError();
+		void SignalOutput();
+
 };
 

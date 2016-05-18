@@ -747,7 +747,7 @@ private: System::Void button11_Click(System::Object^  sender, System::EventArgs^
 				for (int i = 0; i < f_arrlsBorderLetters->Count-1; i++)
 				{
 					ArrayList^ f_arrlsVectorFourier = m_RecognitionWord->Fourier(Convert::ToInt32(f_arrlsBorderLetters[i]), Convert::ToInt32(f_arrlsBorderLetters[i+1]));
-					// here has been neural network
+					// here must be neural network
 				}
 			// count Fourier for letters }
 }
