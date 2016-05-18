@@ -1,0 +1,6 @@
+Debug/*
+recognitionCursive/Debug/*
+*.txt
+*.vcxproj
+*.aps
+*.rc
